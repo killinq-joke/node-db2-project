@@ -22,6 +22,13 @@ function insert(car) {
     })
 }
 
+function update(id, car) {
+    return db("cars").update(car).where({id})
+    .then(() => {
+        return getById(id)
+    })
+}
+
 app.get("/", (req, res) => {
     get()
     .then(response => {
@@ -46,6 +53,18 @@ app.get("/:id", (req, res) => {
 app.post("/", (req, res) => {
     const car = req.body
     insert(car)
+    .then(response => {
+        res.status(200).json(response)
+    })
+    .catch(err => {
+        res.status(500).end()
+    })
+})
+
+app.put("/:id", (req, res) => {
+    const {id} = req.params
+    const car = req.body
+    update(id, car)
     .then(response => {
         res.status(200).json(response)
     })

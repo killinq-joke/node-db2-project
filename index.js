@@ -29,6 +29,10 @@ function update(id, car) {
     })
 }
 
+function remove(id) {
+    return db("cars").delete().where({id})
+}
+
 app.get("/", (req, res) => {
     get()
     .then(response => {
@@ -67,6 +71,17 @@ app.put("/:id", (req, res) => {
     update(id, car)
     .then(response => {
         res.status(200).json(response)
+    })
+    .catch(err => {
+        res.status(500).end()
+    })
+})
+
+app.delete("/:id", (req, res) => {
+    const {id} = req.params
+    remove(id)
+    .then(response => {
+        res.status(200).json("deleted")
     })
     .catch(err => {
         res.status(500).end()
